@@ -50,6 +50,10 @@ const User = sequelizeConfig.define(
       type: Sequelize.DATEONLY,
       allowNull: true,
     },
+    joinDate: {
+      type: Sequelize.DATEONLY,
+      allowNull: true,
+    },
     address: {
       type: Sequelize.STRING(255),
       allowNull: true,
@@ -62,16 +66,6 @@ const User = sequelizeConfig.define(
       allowNull: true,
       type: Sequelize.STRING(300),
     },
-    biometricId: {
-      type: Sequelize.STRING(50),
-      allowNull: true,
-      comment: "Fingerprint, Face, or RFID unique reference",
-    },
-    group: {
-      type: Sequelize.STRING(50),
-      allowNull: true,
-      comment: "e.g., Gen, Gold, Silver, Morning, Evening",
-    },
     isVerified: {
       allowNull: false,
       type: Sequelize.BOOLEAN,
@@ -79,10 +73,6 @@ const User = sequelizeConfig.define(
     },
     emergencyContact: {
       type: Sequelize.STRING(50),
-      allowNull: true,
-    },
-    notes: {
-      type: Sequelize.TEXT,
       allowNull: true,
     },
     token: {
