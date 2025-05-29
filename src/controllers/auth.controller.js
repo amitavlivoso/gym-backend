@@ -19,13 +19,26 @@ const {
   RESET_PASS_LINK_SENT,
   RESET_PASS_SUCCESS,
 } = require("../utils/messages");
+const sendEmail = require("../utils/mail");
 
 exports.signup = async (req, res) => {
   try {
     let body = req.body;
-    body.password = hashPassword(body.password.trim());
+
+    const plainPassword = body.password?.trim() || "123456";
+    body.password = hashPassword(plainPassword);
+
     let result = await User.addUser(body);
     result = getRawData(result);
+
+    // Send welcome email with credentials
+    await sendEmail(
+      result.email,
+      "Welcome to Livoso",
+      result.firstName || "User",
+      plainPassword
+    );
+
     res
       .status(httpResponseCodes.CREATED)
       .json(

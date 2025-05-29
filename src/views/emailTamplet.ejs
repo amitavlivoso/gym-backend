@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Credentials</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        text-align: center;
+        color: #3cacae;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .content {
+        font-size: 16px;
+        color: #333333;
+        line-height: 1.6;
+      }
+
+      .credentials {
+        background-color: #f0f8f8;
+        padding: 15px;
+        border-left: 4px solid #3cacae;
+        margin: 20px 0;
+        border-radius: 5px;
+      }
+
+      .footer {
+        font-size: 12px;
+        color: #999999;
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .label {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">Your Account Details</div>
+
+      <div class="content">
+        <p>Hello <%= name %>,</p>
+        <p>
+          Welcome to Livoso! Your account has been created successfully. Please
+          find your login credentials below:
+        </p>
+
+        <div class="credentials">
+          <p><span class="label">Email:</span> <%= email %></p>
+          <p><span class="label">Password:</span> <%= password %></p>
+        </div>
+
+        <p>
+          Please keep these credentials safe. You can log in using the button
+          below:
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>If you did not request this, please ignore this email.</p>
+        <p>Thank you for using Livoso!</p>
+      </div>
+    </div>
+  </body>
+</html>
