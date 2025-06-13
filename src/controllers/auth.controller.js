@@ -74,7 +74,7 @@ exports.signin = async (req, res) => {
           result.firstName,
           result.status,
           result.id,
-          result.roll
+          result.role
         );
         result.accessToken = token;
         res
