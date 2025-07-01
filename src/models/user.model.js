@@ -79,6 +79,20 @@ const User = sequelizeConfig.define(
       type: Sequelize.STRING,
       allowNull: true,
     },
+    adharNumber: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    managedByAdminId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
+    },
   },
   {
     tableName: "users",

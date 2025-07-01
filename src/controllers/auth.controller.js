@@ -50,6 +50,20 @@ exports.signup = async (req, res) => {
       .json(prepareResponse("SERVER_ERROR", SERVER_ERROR_MESSAGE, null, error));
   }
 };
+exports.updateProfile = async (req, res) => {
+  try {
+    let body = req.body;
+    let result = await User.updateUser(req.decoded.id, body);
+    result = getRawData(result);
+    res
+      .status(httpResponseCodes.OK)
+      .json(prepareResponse("OK", UPDATE_PROFILE_SUCCESS, result, null));
+  } catch (error) {
+    res
+      .status(httpResponseCodes.SERVER_ERROR)
+      .json(prepareResponse("SERVER_ERROR", SERVER_ERROR_MESSAGE, null, error));
+  }
+};
 
 exports.signin = async (req, res) => {
   try {

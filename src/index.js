@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const sequelize = require("./config/db.config");
+const path = require("path");
 
 require("dotenv").config();
 
@@ -25,6 +26,9 @@ app.use((req, res, next) => {
   next();
 });
 
+const buildPath = path.join(__dirname, "../build");
+app.use(express.static(buildPath));
+
 sequelize
   .authenticate()
   .then(async () => {
@@ -36,6 +40,8 @@ sequelize
   });
 
 app.use("/api", require("./routes"));
+
+
 
 app.listen(port, () => {
   console.log("Your Server running at " + port);
