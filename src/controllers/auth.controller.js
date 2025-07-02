@@ -69,39 +69,67 @@ exports.signin = async (req, res) => {
   try {
     let result = await User.getOneUserByCond({ email: req.body.email });
     result = getRawData(result);
-    if (result) {
-      const hash = comparePassword(req.body.password, result.password);
-      if (!hash) {
-        res
-          .status(httpResponseCodes.FORBIDDEN)
-          .json(
-            prepareResponse("FORBIDDEN", CURRENT_PASSWORD_INCORRECT, null, null)
-          );
-      }
-      if (result.status === "ARCHIVED") {
-        res
-          .status(httpResponseCodes.FORBIDDEN)
-          .json(prepareResponse("FORBIDDEN", CONTACT_SUPPORT, null, null));
-      } else {
-        let token = await generateSign(
-          result.email,
-          result.firstName,
-          result.status,
-          result.id,
-          result.role
-        );
-        result.accessToken = token;
-        res
-          .status(httpResponseCodes.OK)
-          .json(prepareResponse("OK", LOGIN, result, null));
-      }
-    } else {
-      res
+
+    if (!result) {
+      return res
         .status(httpResponseCodes.NOT_FOUND)
         .json(prepareResponse("NOT_FOUND", ACCOUNT_NOT_FOUND, null, null));
     }
+
+    // Check password
+    const hash = comparePassword(req.body.password, result.password);
+    if (!hash) {
+      return res
+        .status(httpResponseCodes.FORBIDDEN)
+        .json(
+          prepareResponse("FORBIDDEN", CURRENT_PASSWORD_INCORRECT, null, null)
+        );
+    }
+
+    // Block if archived
+    if (result.status === "ARCHIVED") {
+      return res
+        .status(httpResponseCodes.FORBIDDEN)
+        .json(prepareResponse("FORBIDDEN", CONTACT_SUPPORT, null, null));
+    }
+
+    // ✅ Only for Admins → check Payment or Trial
+    if (result.role === "Admin" && !result.hasPaid) {
+      const now = new Date();
+      const trialEnds = new Date(result.trialStartDate);
+      trialEnds.setDate(trialEnds.getDate() + 7);
+
+      if (now > trialEnds) {
+        // Trial expired and not paid
+        return res
+          .status(httpResponseCodes.FORBIDDEN)
+          .json(
+            prepareResponse(
+              "FORBIDDEN",
+              "Your 7days free trial has expired. Please complete payment to continue as Admin.",
+              null,
+              null
+            )
+          );
+      }
+    }
+
+    // Passed all checks → Generate token
+    let token = await generateSign(
+      result.email,
+      result.firstName,
+      result.status,
+      result.id,
+      result.role
+    );
+
+    result.accessToken = token;
+
+    return res
+      .status(httpResponseCodes.OK)
+      .json(prepareResponse("OK", LOGIN, result, null));
   } catch (error) {
-    res
+    return res
       .status(httpResponseCodes.SERVER_ERROR)
       .json(prepareResponse("SERVER_ERROR", SERVER_ERROR_MESSAGE, null, error));
   }

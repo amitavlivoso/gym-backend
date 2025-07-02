@@ -93,6 +93,27 @@ const User = sequelizeConfig.define(
       onUpdate: "CASCADE",
       onDelete: "SET NULL",
     },
+
+    trainerId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
+    },
+    isPaid: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, // default = unpaid
+    },
+
+    trialStartDate: {
+      type: Sequelize.DATE,
+      allowNull: true, // You can make this required if needed
+    },
   },
   {
     tableName: "users",

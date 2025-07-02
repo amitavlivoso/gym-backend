@@ -47,6 +47,10 @@ const NutritionPlan = sequelize.define("nutrition_plan", {
     allowNull: true,
     comment: "Specific protein recommendation (e.g., Whey, Soy, Pea)",
   },
+  isCompleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = NutritionPlan;

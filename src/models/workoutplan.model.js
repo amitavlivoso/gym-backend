@@ -32,6 +32,10 @@ const WorkoutPlan = sequelize.define("workout_plan", {
     type: DataTypes.DATEONLY,
     allowNull: true,
   },
+  isCompleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = WorkoutPlan;
