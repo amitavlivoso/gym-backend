@@ -5,6 +5,7 @@ const { generateSign } = require("../utils/token");
 const query = require("../services/query.service");
 const { prepareResponse } = require("../utils/response");
 const httpResponseCodes = require("../utils/http");
+const bcrypt = require("bcryptjs");
 const {
   VERIFY_EMAIL_BEFORE_LOGIN,
   USER_PROFILE,
@@ -35,10 +36,13 @@ exports.signup = async (req, res) => {
     await sendEmail(
       result.email,
       "Welcome to Livoso",
-      result.firstName || "User",
-      plainPassword
+      "email", // <-- name of the new template
+      {
+        name: result.firstName || "User",
+        password: plainPassword,
+        subject: "Welcome to Livoso",
+      }
     );
-
     res
       .status(httpResponseCodes.CREATED)
       .json(
@@ -258,6 +262,16 @@ exports.forgotPassword = async (req, res) => {
     result = getRawData(result);
     if (result) {
       await User.updateUser(result.id, { token: token });
+      await sendEmail(
+        result.email,
+        "Your Livoso Password Reset OTP",
+        "otpEmail", // your EJS template
+        {
+          name: result.firstName || "User",
+          otp: token,
+          subject: "Your Livoso Password Reset OTP",
+        }
+      );
       res
         .status(httpResponseCodes.OK)
         .json(prepareResponse("OK", RESET_PASS_LINK_SENT, result, null));

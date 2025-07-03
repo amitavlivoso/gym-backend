@@ -27,7 +27,6 @@ app.use((req, res, next) => {
 });
 
 const buildPath = path.join(__dirname, "../build");
-app.use(express.static(buildPath));
 
 sequelize
   .authenticate()
@@ -40,8 +39,7 @@ sequelize
   });
 
 app.use("/api", require("./routes"));
-
-
+app.use(express.static(buildPath));
 
 app.listen(port, () => {
   console.log("Your Server running at " + port);

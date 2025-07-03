@@ -3,15 +3,10 @@ const ejs = require("ejs");
 const path = require("path");
 require("dotenv").config();
 
-const sendEmail = async (email, title, name, password) => {
-  const templatePath = path.join(__dirname, "../views/emailTamplet.ejs");
+const sendEmail = async (to, subject, template, variables) => {
+  const templatePath = path.join(__dirname, `../views/${template}.ejs`);
 
-  const html = await ejs.renderFile(templatePath, {
-    title,
-    name,
-    email,
-    password,
-  });
+  const html = await ejs.renderFile(templatePath, variables);
 
   const transporter = nodemailer.createTransport({
     service: "Gmail",
@@ -23,8 +18,8 @@ const sendEmail = async (email, title, name, password) => {
 
   await transporter.sendMail({
     from: `"Livoso" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: title,
+    to,
+    subject,
     html,
   });
 };
